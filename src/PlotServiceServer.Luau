@@ -1,3 +1,9 @@
+--[[
+MIT License
+
+Copyright PlotService© 2026 by Astrally0
+]]
+
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 
