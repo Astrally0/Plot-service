@@ -27,7 +27,6 @@ function Plot.new(plotData: plotData)
 	self.plotData = plotData.plotData
 	
 	if self.loadCallback then
-		print(self.owner)
 		self.loadCallback(self.owner, self.plot)
 	end
 	
