@@ -1,3 +1,9 @@
+--[[
+MIT License
+
+Copyright PlotService© 2026 by Astrally0
+]]
+
 local PlotServiceServer = require(script.PlotServiceServer)
 local PlotServiceClient = require(script.PlotServiceClient)
 
