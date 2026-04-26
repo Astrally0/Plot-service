@@ -1,53 +1,33 @@
---[[
-MIT License
+local Networker = require(script.Parent.networker)
 
-Copyright PlotService© 2026 by Astrally0
-]]
+local PlotClient = require(script.Parent.classes.PlotClient)
 
-local RunService = game:GetService("RunService")
-
-if RunService:IsServer() then
-	return nil
-end
-
-local GetPlot = script.Parent.remotes.getPlot
-local GetData = script.Parent.remotes.getData
-local SetData = script.Parent.remotes.setData
-
-type Plot = {
-	plot: Model,
-	owner: Player,
-	plotData: { [any]: any },
+local PlotServiceClient = {
+	_plot = nil :: PlotClient.PlotClient
 }
 
-local PlotServiceClient = {}
+export type PlotServiceClient = typeof(PlotServiceClient) & {
+	networker: Networker.Client
+}
 
-export type PlotServiceClient = typeof(PlotServiceClient) & {}
-
-function PlotServiceClient.init(data: {}?)
-	local self = PlotServiceClient :: PlotServiceClient
-	
-	if data then
-		self.setData(self, data)
-	end
+function PlotServiceClient.init(self: PlotServiceClient)
+	self.networker = Networker.client.new("PlotService", self)
 end
 
-function PlotServiceClient.getPlot(self: PlotServiceClient): Plot?
-	return GetPlot:InvokeServer()
+function PlotServiceClient.PlayerAdded(self: PlotServiceClient)
+	self._plot = PlotClient.new()
 end
 
-function PlotServiceClient.getData(
-	self: PlotServiceClient,
-	path: { string } | string 
-): any
-	return GetData:InvokeServer()
+function PlotServiceClient.PlayerRemoving(self: PlotServiceClient)
+	self._plot:Destroy()
 end
 
-function PlotServiceClient.setData(
-	self: PlotServiceClient,
-	value: any
-): any
-	return SetData:FireServer(value)
+function PlotServiceClient.getPlot(self: PlotServiceClient): Model?
+	return self._plot:getPlot()
+end
+
+function PlotServiceClient.PivotToPlot(self: PlotServiceClient, offset: Vector3?)
+	self.networker:fire("PivotToPlot", offset)
 end
 
 return PlotServiceClient
